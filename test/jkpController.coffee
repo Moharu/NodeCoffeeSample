@@ -22,5 +22,3 @@ describe 'the jkpController', ->
 
 			instance.post defaultParams, ->
 			expect(gamePlayCalled).to.eql true
-
-
