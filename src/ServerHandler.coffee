@@ -1,5 +1,5 @@
 url = require 'url'
-jkpController = require './jkpController'
+Controller = require './Controller'
 
 class ServerHandler
 
@@ -10,17 +10,16 @@ class ServerHandler
 		@invokeController requestOptions
 
 	invokeController: (requestOptions) ->
-		instance = new jkpController
+		instance = new Controller
 		requestMethod = @request.method.toLowerCase()
 
 		if typeof instance[requestMethod] is 'function'
-			instance[requestMethod] requestOptions, (response) =>
+			response = instance[requestMethod] requestOptions
+			statusCode = response?.statusCode || 200
+			body = String(response?.body) || ''
 
-				statusCode = response?.statusCode || 200
-				body = response?.body || ''
-
-				@response.writeHead statusCode
-				@response.end body
+			@response.writeHead statusCode
+			@response.end body
 		else
 			@response.writeHead 404
 			@response.end 'MethodNotFound'
